@@ -30,13 +30,15 @@ class Clause:
             raise ValueError("Indices : row_ind =", row_ind, "column_ind =", column_ind, "is incorrect")
 
     def str_from_index(self, index):
+        bo = True
         if index >= 0:
             index -= 1
+            bo = False
         else:
             index += 1
         row_ind = abs(index) // self.n_columns
         column_ind = abs(index) % self.n_columns
-        if index < 0:
+        if bo:
             return '~{0}_{1}_{2}'.format(self.varname, row_ind, column_ind)
         return '{0}_{1}_{2}'.format(self.varname, row_ind, column_ind)
 
