@@ -9,7 +9,8 @@ import sys
 import math
 import random
 
-#______________________________________________________________________________
+# ______________________________________________________________________________
+
 
 class Problem:
     """The abstract class for a formal problem.  You should subclass this and
@@ -21,21 +22,22 @@ class Problem:
         """The constructor specifies the initial state, and possibly a goal
         state, if there is a unique goal.  Your subclass's constructor can add
         other arguments."""
-        self.initial = initial; self.goal = goal
-        
+        self.initial = initial
+        self.goal = goal
+
     def successor(self, state):
         """Given a state, return a sequence of (action, state) pairs reachable
         from this state. If there are many successors, consider an iterator
         that yields the successors one at a time, rather than building them
         all at once. Iterators will work fine within the framework."""
         abstract
-    
+
     def goal_test(self, state):
         """Return True if the state is a goal. The default method compares the
         state to self.goal, as specified in the constructor. Implement this
         method if checking against a single self.goal is not enough."""
         return state == self.goal
-    
+
     def path_cost(self, c, state1, action, state2):
         """Return the cost of a solution path that arrives at state2 from
         state1 via action, assuming cost c to get up to state1. If the problem
@@ -48,8 +50,9 @@ class Problem:
         """For optimization problems, each state has a value.  Hill-climbing
         and related algorithms try to maximize this value."""
         abstract
-#______________________________________________________________________________
-    
+# ______________________________________________________________________________
+
+
 class Node:
     """A node in a search tree. Contains a pointer to the parent (the node
     that this is a successor of) and to the actual state for this node. Note
@@ -62,18 +65,18 @@ class Node:
 
     def __init__(self, state, parent=None, action=None, path_cost=0):
         "Create a search tree Node, derived from a parent by an action."
-        self.state=state
+        self.state = state
         self.parent = parent
-        self.action=action
-        self.path_cost=path_cost
+        self.action = action
+        self.path_cost = path_cost
         if parent:
             self.depth = parent.depth + 1
         else:
             self.depth = 0
-            
+
     def __repr__(self):
         return "<Node %s>" % (self.state,)
-    
+
     def path(self):
         "Create a list of nodes from the root to this node."
         x, result = self, [self]
@@ -84,13 +87,13 @@ class Node:
 
     def expand(self, problem):
         "Yield the nodes reachable from this node. [Fig. 3.8]"
-        for (act,next) in problem.successor(self.state):
+        for (act, next) in problem.successor(self.state):
             yield Node(next, self, act,
-                problem.path_cost(self.path_cost, self.state, act, next))
+                       problem.path_cost(self.path_cost, self.state, act, next))
 
 
-#______________________________________________________________________________
-## Uninformed Search algorithms
+# ______________________________________________________________________________
+# Uninformed Search algorithms
 
 def tree_search(problem, fringe):
     """Search through the successors of a problem to find a goal.
@@ -102,19 +105,22 @@ def tree_search(problem, fringe):
         node = fringe.pop()
         n += 1
         if problem.goal_test(node.state):
-            return node,n
+            return node, n
         #print("not goal")
         fringe.extend(node.expand(problem))
         #print("len fringe = ", len(fringe))
-    return None,n
+    return None, n
+
 
 def breadth_first_tree_search(problem):
     "Search the shallowest nodes in the search tree first. [p 74]"
     return tree_search(problem, FIFOQueue())
-    
+
+
 def depth_first_tree_search(problem):
     "Search the deepest nodes in the search tree first. [p 74]"
     return tree_search(problem, Stack())
+
 
 def graph_search(problem, fringe):
     """Search through the successors of a problem to find a goal.
@@ -128,19 +134,22 @@ def graph_search(problem, fringe):
         n += 1
         #sys.stdout.write("\rnumber of explored nodes = " + str(n))
         if problem.goal_test(node.state):
-            return node,n
+            return node, n
         if node.state not in closed:
             closed[node.state] = True
             fringe.extend(node.expand(problem))
-    return None,n
+    return None, n
+
 
 def breadth_first_graph_search(problem):
     "Search the shallowest nodes in the search tree first. [p 74]"
     return graph_search(problem, FIFOQueue())
-    
+
+
 def depth_first_graph_search(problem):
     "Search the deepest nodes in the search tree first. [p 74]"
     return graph_search(problem, Stack())
+
 
 def depth_limited_search(problem, limit=50):
     "[Fig. 3.12]"
@@ -164,19 +173,16 @@ def depth_limited_search(problem, limit=50):
     # Body of depth_limited_search:
     return recursive_dls(Node(problem.initial), problem, limit)
 
+
 def iterative_deepening_search(problem):
     "[Fig. 3.13]"
     for depth in range(sys.maxsize):
         result = depth_limited_search(problem, depth)
-        if result is not 'cutoff':
+        if result != 'cutoff':
             return result
 
 
-
-
-
-
-#______________________________________________________________________________
+# ______________________________________________________________________________
 # Informed (Heuristic) Search
 
 def best_first_graph_search(problem, f):
@@ -184,7 +190,8 @@ def best_first_graph_search(problem, f):
     You specify the function f(node) that you want to minimize; for example,
     if f is a heuristic estimate to the goal, then we have greedy best
     first search; if f is node.depth then we have depth-first search."""
-    return graph_search(problem, PriorityQueue(f,min))
+    return graph_search(problem, PriorityQueue(f, min))
+
 
 def astar_graph_search(problem, h):
     """A* search is best-first graph search with f(n) = g(n)+h(n).
@@ -199,7 +206,8 @@ def best_first_tree_search(problem, f):
     You specify the function f(node) that you want to minimize; for example,
     if f is a heuristic estimate to the goal, then we have greedy best
     first search; if f is node.depth then we have depth-first search."""
-    return tree_search(problem, PriorityQueue(f,min))
+    return tree_search(problem, PriorityQueue(f, min))
+
 
 def astar_tree_search(problem, h):
     """A* search is best-first graph search with f(n) = g(n)+h(n).
@@ -209,11 +217,7 @@ def astar_tree_search(problem, h):
     return best_first_tree_search(problem, f)
 
 
-
-
-
-
-#____________________________________________________________________________
+# ____________________________________________________________________________
 # Local Search Algorithms
 
 class LSNode:
@@ -245,8 +249,6 @@ class LSNode:
         # return end
 
 
-
-
 def random_walk(problem, limit=100, callback=None):
     """Perform a random walk in the search space and return the best solution
     found. The returned value is a Node.
@@ -255,7 +257,9 @@ def random_walk(problem, limit=100, callback=None):
     """
     current = LSNode(problem, problem.initial, 0)
     best = current
+    steps = 0
     for step in range(limit):
+        steps = step + 1
         if callback is not None:
             callback(current)
         # print(current)
@@ -264,7 +268,7 @@ def random_walk(problem, limit=100, callback=None):
         current = random.choice(list(current.expand()))
         if current.value() > best.value():
             best = current
-    return best
+    return best, steps, problem.value(best.state)
 
 
 def exp_schedule(k=20, lam=0.05, limit=100):
@@ -293,6 +297,3 @@ def simulated_annealing(problem, schedule=exp_schedule(), callback=None):
                 best = current
         else:
             current = LSNode(problem, current.state, t + 1)
-
-
-
