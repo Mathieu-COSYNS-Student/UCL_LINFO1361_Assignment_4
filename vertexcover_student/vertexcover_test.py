@@ -57,8 +57,6 @@ def run_tests(filename):
     print(f'{mean(rnd_w_elaps_steps)}', end=',')
     print(f'{mean(rnd_w_elaps_values)}')
 
-    pass
-
 
 if __name__ == '__main__':
     run_tests(sys.argv[1])
