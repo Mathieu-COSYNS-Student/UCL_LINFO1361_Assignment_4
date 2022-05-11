@@ -39,7 +39,7 @@ def get_expression(size, queens=None):
                 c_at_most_one_per_row.add_negative(k, i)
                 expression.append(c_at_most_one_per_row)
 
-                if i < size-1 and i+k < size:
+                if k < size - i:
                     c_main_diag_left_top = Clause(size)
                     c_main_diag_left_top.add_negative(j, j+i)
                     c_main_diag_left_top.add_negative(k, k+i)
