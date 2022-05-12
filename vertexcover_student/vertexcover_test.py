@@ -33,29 +33,29 @@ def run_tests(filename):
     for _ in range(10):
         mx_elaps, mx_result = elapsed_time(maxvalue, vc_problem, step_limit)
         mx_elaps_times.append(mx_elaps)
-        mx_elaps_steps.append(mx_result[2])
-        mx_elaps_values.append(mx_result[1])
+        mx_elaps_values.append(vc_problem.value(mx_result.state))
+        mx_elaps_steps.append(mx_result.step)
         rnd_mx_elaps, rnd_max_result = elapsed_time(
             randomized_maxvalue, vc_problem, step_limit)
         rnd_mx_elaps_times.append(rnd_mx_elaps)
-        rnd_mx_elaps_steps.append(rnd_max_result[2])
-        rnd_mx_elaps_values.append(rnd_max_result[1])
+        rnd_mx_elaps_values.append(vc_problem.value(rnd_max_result.state))
+        rnd_mx_elaps_steps.append(rnd_max_result.step)
         rnd_w_elaps, rnd_w_result = elapsed_time(
             random_walk, vc_problem, step_limit)
         rnd_w_elaps_times.append(rnd_w_elaps)
-        rnd_w_elaps_steps.append(rnd_w_result[2])
-        rnd_w_elaps_values.append(rnd_w_result[1])
+        rnd_w_elaps_values.append(vc_problem.value(rnd_w_result.state))
+        rnd_w_elaps_steps.append(rnd_w_result.step)
 
     print(f'{filename[10:13]}', end=',')
     print(f'{mean(mx_elaps_times):.5f}', end=',')
-    print(f'{mean(mx_elaps_steps)}', end=',')
     print(f'{mean(mx_elaps_values)}', end=',')
+    print(f'{mean(mx_elaps_steps)}', end=',')
     print(f'{mean(rnd_mx_elaps_times):.5f}', end=',')
-    print(f'{mean(rnd_mx_elaps_steps)}', end=',')
     print(f'{mean(rnd_mx_elaps_values)}', end=',')
+    print(f'{mean(rnd_mx_elaps_steps)}', end=',')
     print(f'{mean(rnd_w_elaps_times):.5f}', end=',')
-    print(f'{mean(rnd_w_elaps_steps)}', end=',')
-    print(f'{mean(rnd_w_elaps_values)}')
+    print(f'{mean(rnd_w_elaps_values)}', end=',')
+    print(f'{mean(rnd_w_elaps_steps)}')
 
 
 if __name__ == '__main__':

@@ -83,9 +83,7 @@ def read_instance(instanceFile):
 def maxvalue(problem, limit=100, callback=None):
     current = LSNode(problem, problem.initial, 0)
     best = current
-    steps = 0
-    for step in range(limit):
-        steps = step + 1
+    for _ in range(limit):
         if callback is not None:
             callback(current)
 
@@ -98,7 +96,7 @@ def maxvalue(problem, limit=100, callback=None):
 
         if current.value() > best.value():
             best = current
-    return best, steps, problem.value(best.state)
+    return best
 
 
 class MyPriorityQueue(PriorityQueue):
@@ -116,9 +114,7 @@ class MyPriorityQueue(PriorityQueue):
 def randomized_maxvalue(problem, limit=100, callback=None):
     current = LSNode(problem, problem.initial, 0)
     best = current
-    steps = 0
-    for step in range(limit):
-        steps = step + 1
+    for _ in range(limit):
         if callback is not None:
             callback(current)
 
@@ -138,7 +134,7 @@ def randomized_maxvalue(problem, limit=100, callback=None):
 
         if current.value() > best.value():
             best = current
-    return best, steps, problem.value(best.state)
+    return best
 
 
 #####################
@@ -149,7 +145,7 @@ if __name__ == '__main__':
     init_state = State(info[0], info[1], info[2])
     vc_problem = VertexCover(init_state)
     step_limit = 100
-    node, _, _ = randomized_maxvalue(vc_problem, step_limit)
+    node = randomized_maxvalue(vc_problem, step_limit)
     state = node.state
     print(state)
     # node = randomized_maxvalue(vc_problem, step_limit)

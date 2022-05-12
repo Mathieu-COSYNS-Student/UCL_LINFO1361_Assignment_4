@@ -257,9 +257,7 @@ def random_walk(problem, limit=100, callback=None):
     """
     current = LSNode(problem, problem.initial, 0)
     best = current
-    steps = 0
-    for step in range(limit):
-        steps = step + 1
+    for _ in range(limit):
         if callback is not None:
             callback(current)
         # print(current)
@@ -268,7 +266,7 @@ def random_walk(problem, limit=100, callback=None):
         current = random.choice(list(current.expand()))
         if current.value() > best.value():
             best = current
-    return best, steps, problem.value(best.state)
+    return best
 
 
 def exp_schedule(k=20, lam=0.05, limit=100):
